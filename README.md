@@ -9,7 +9,7 @@ Every file in `utils/`can be imported in your scrapers, as it is added as a pack
 
 This scrapers retrieves information about current court cases ("retslister") in Danish "byretter" (Currently, Højesteret etc. are not included). Civil cases and tvangsauktioner are filtered away. Relevance of the cases are estimated based on keywords and "gerningskoder" (types of crimes) from the Danish Police.
 
-The scrapers runs every second Monday at 9.00. To run it manually, use:
+To run it manually, use:
 ```
 poetry run python domstol-dk/retrieve.py --outfile test.xlsx
 ```
