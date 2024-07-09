@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "scrapers-for-journalists"
+name = "scrapers_for_journalists"
 version = "0.1.0"
 description = ""
 authors = ["MadsLang <lang@k.dk>"]
