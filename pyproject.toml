@@ -17,6 +17,7 @@ openpyxl = "^3.1.5"
 bs4 = "^0.0.2"
 google-cloud-aiplatform = "^1.57.0"
 tqdm = "^4.66.4"
+lxml = "^5.2.2"
 
 
 [tool.poetry.group.dev.dependencies]

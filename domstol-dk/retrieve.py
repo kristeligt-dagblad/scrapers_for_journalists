@@ -120,34 +120,86 @@ class DomStolScraper(BaseScraper):
 
         return pd.DataFrame(cases)
 
+    def prepare_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        # Filter only Straffesag
+        df = df[df["sagstype"].str.contains("Straffesag")]
+
+        # Add gerningskoder fra DST
+        afg_ger9 = pd.read_html(
+            "http://www.dst.dk/da/Statistik/dokumentation/Times/kriminalstatistik/afg-ger9"
+        )[0]
+        afg_ger9["Kode"] = afg_ger9["Kode"].astype(str)
+        afg_ger9["code1"] = afg_ger9["Kode"].apply(lambda x: x[0])
+        afg_ger9["code2"] = afg_ger9["Kode"].apply(lambda x: x[:2])
+        afg_ger9["code4"] = afg_ger9["Kode"].apply(lambda x: x[:4])
+        afg_ger9["code5"] = afg_ger9["Kode"].apply(lambda x: x[-5:])
+        afg_ger9 = afg_ger9.rename(columns={"Tekst": "Tekst5"})
+        afg_ger9 = afg_ger9[["Kode", "code1", "code2", "code4", "code5", "Tekst5"]]
+
+        code_to_text_1 = {
+            "0": "Uoplyst",
+            "1": "Straffelov i alt",
+            "2": "Færdselslov i alt",
+            "3": "Øvrige særlige i alt",
+        }
+
+        code_to_text_2 = {
+            "0": "Uoplyst straffelov",
+            "00": "Uoplyst Straffelov",
+            "10": "Uoplyst straffelov",
+            "11": "Seksual forbrydelser",
+            "12": "Voldsforbrydelser",
+            "13": "Ejendomsforbrydelser",
+            "14": "Andre forbrydelser",
+            "21": "Færdseæsuheld specificeret",
+            "22": "Færdselslov spiritus",
+            "24": "Mangler ved køretøj",
+            "26": "Færdselslov i øvrigt",
+            "32": "Lov om euforiserende stoffer",
+            "34": "Våbenloven",
+            "36": "Skatte- og afgiftslove",
+            "38": "Særlove i øvrigt",
+        }
+
+        afg_ger9["Tekst1"] = afg_ger9["code1"].apply(lambda x: code_to_text_1[x])
+        afg_ger9["Tekst2"] = afg_ger9["code2"].apply(lambda x: code_to_text_2[x])
+
+        df["code5"] = df["politi journalnr"].apply(lambda x: x.split("-")[1])
+        df = df.merge(afg_ger9, on="code5", how="left")
+
+        # Sort chronologically from date
+        df = df.sort_values("dato_første")
+
+        return df
+
 
 if __name__ == "__main__":
     dfs = []
     courts = [
         "koebenhavn",
-        "bornholm",
-        "esbjerg",
-        "frederiksberg",
-        "glostrup",
-        "helsingoer",
-        "herning",
-        "hilleroed",
-        "hjoerring",
-        "holbaek",
-        "holstebro",
-        "horsens",
-        "kolding",
-        "lyngby",
-        "nykoebingfalster",
-        "naestved",
-        "odense",
-        "randers",
-        "roskilde",
-        "svendborg",
-        "soenderborg",
-        "viborg",
-        "aalborg",
-        "aarhus",
+        # "bornholm",
+        # "esbjerg",
+        # "frederiksberg",
+        # "glostrup",
+        # "helsingoer",
+        # "herning",
+        # "hilleroed",
+        # "hjoerring",
+        # "holbaek",
+        # "holstebro",
+        # "horsens",
+        # "kolding",
+        # "lyngby",
+        # "nykoebingfalster",
+        # "naestved",
+        # "odense",
+        # "randers",
+        # "roskilde",
+        # "svendborg",
+        # "soenderborg",
+        # "viborg",
+        # "aalborg",
+        # "aarhus",
     ]
 
     scraper = DomStolScraper()
@@ -156,5 +208,6 @@ if __name__ == "__main__":
         dfs.append(scraper.scrape_court(court))
 
     final_df = pd.concat(dfs)
+    final_df = scraper.prepare_df(final_df)
 
     final_df.to_excel("domstol-dk/test.xlsx", engine="openpyxl", index=False)
