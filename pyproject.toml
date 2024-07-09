@@ -6,6 +6,7 @@ authors = ["MadsLang <lang@k.dk>"]
 readme = "README.md"
 packages = [
    { include = "*", from = "utils" }
+   { include = "domstoldk"}
 ]
 
 
