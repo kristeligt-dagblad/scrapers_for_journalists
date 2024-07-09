@@ -1,6 +1,7 @@
 from tqdm import tqdm
 import pandas as pd
 from base import BaseScraper
+from argparse import ArgumentParser
 
 
 class DomStolScraper(BaseScraper):
@@ -174,32 +175,38 @@ class DomStolScraper(BaseScraper):
 
 
 if __name__ == "__main__":
+    parser = ArgumentParser(prog="DomStolScraper", description="Scrapes domstol.dk")
+    parser.add_argument(
+        "-of", "--outfile", help="the path to save the Excel-file. Must end with .xlsx"
+    )
+    args = parser.parse_args()
+
     dfs = []
     courts = [
         "koebenhavn",
-        # "bornholm",
-        # "esbjerg",
-        # "frederiksberg",
-        # "glostrup",
-        # "helsingoer",
-        # "herning",
-        # "hilleroed",
-        # "hjoerring",
-        # "holbaek",
-        # "holstebro",
-        # "horsens",
-        # "kolding",
-        # "lyngby",
-        # "nykoebingfalster",
-        # "naestved",
-        # "odense",
-        # "randers",
-        # "roskilde",
-        # "svendborg",
-        # "soenderborg",
-        # "viborg",
-        # "aalborg",
-        # "aarhus",
+        "bornholm",
+        "esbjerg",
+        "frederiksberg",
+        "glostrup",
+        "helsingoer",
+        "herning",
+        "hilleroed",
+        "hjoerring",
+        "holbaek",
+        "holstebro",
+        "horsens",
+        "kolding",
+        "lyngby",
+        "nykoebingfalster",
+        "naestved",
+        "odense",
+        "randers",
+        "roskilde",
+        "svendborg",
+        "soenderborg",
+        "viborg",
+        "aalborg",
+        "aarhus",
     ]
 
     scraper = DomStolScraper()
@@ -210,4 +217,4 @@ if __name__ == "__main__":
     final_df = pd.concat(dfs)
     final_df = scraper.prepare_df(final_df)
 
-    final_df.to_excel("domstol-dk/test.xlsx", engine="openpyxl", index=False)
+    final_df.to_excel(args.of, engine="openpyxl", index=False)
