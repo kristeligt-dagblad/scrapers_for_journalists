@@ -5,7 +5,7 @@ description = "Scrapers that helps journalists at Kristeligt Dagblad"
 authors = ["MadsLang <lang@k.dk>"]
 readme = "README.md"
 packages = [
-   { include = "*", from = "utils" }
+   { include = "*", from = "utils" },
    { include = "domstoldk"}
 ]
 
