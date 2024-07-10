@@ -165,7 +165,7 @@ class DomStolScraper(BaseScraper):
         afg_ger9["Tekst1"] = afg_ger9["code1"].apply(lambda x: code_to_text_1[x])
         afg_ger9["Tekst2"] = afg_ger9["code2"].apply(lambda x: code_to_text_2[x])
 
-        df["code5"] = df["politi journalnr"].apply(lambda x: x.split("-")[1])
+        df["code5"] = df["politi journalnr"].fillna("").apply(self.split_police_codes)
         df = df.merge(afg_ger9, on="code5", how="left")
 
         # Sort chronologically from date
@@ -173,11 +173,18 @@ class DomStolScraper(BaseScraper):
 
         return df
 
+    @staticmethod
+    def split_police_codes(value: str):
+        try:
+            return value.split("-")[1]
+        except Exception:
+            return None
+
 
 if __name__ == "__main__":
     parser = ArgumentParser(prog="DomStolScraper", description="Scrapes domstol.dk")
     parser.add_argument(
-        "-of", "--outfile", help="the path to save the Excel-file. Must end with .xlsx"
+        "--outfile", help="the path to save the Excel-file. Must end with .xlsx"
     )
     args = parser.parse_args()
 
@@ -217,4 +224,4 @@ if __name__ == "__main__":
     final_df = pd.concat(dfs)
     final_df = scraper.prepare_df(final_df)
 
-    final_df.to_excel(args.of, engine="openpyxl", index=False)
+    final_df.to_excel(args.outfile, engine="openpyxl", index=False)
