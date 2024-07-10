@@ -123,7 +123,7 @@ class DomStolScraper(BaseScraper):
 
     def prepare_df(self, df: pd.DataFrame) -> pd.DataFrame:
         # Filter only Straffesag
-        df = df[df["sagstype"].str.contains("Straffesag")]
+        df = df[df["sagstype"].fillna("").str.contains("Straffesag")]
 
         # Add gerningskoder fra DST
         afg_ger9 = pd.read_html(
