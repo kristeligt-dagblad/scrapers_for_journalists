@@ -4,7 +4,7 @@ Scraper(s) to help the journalists retrieve data or monitor sites for potential 
 ## Using the scrapers
 
 ```
-pip install git+https://github.com/kristeligt-dagblad/scrapers_for_journalists.git
+pip install scrapers_for_journalists==0.1.0
 ```
 
 And then import a scraper, e.g. `from domstoldk.retrive import DomStolScrape`
