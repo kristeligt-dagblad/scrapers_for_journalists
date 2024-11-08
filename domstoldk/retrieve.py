@@ -1,8 +1,9 @@
-from tqdm import tqdm
-import pandas as pd
 import os
-from base import BaseScraper
 from argparse import ArgumentParser
+
+import pandas as pd
+from base import BaseScraper
+from tqdm import tqdm
 
 
 class DomStolScraper(BaseScraper):

@@ -1,8 +1,9 @@
-from bs4 import BeautifulSoup
 import re
-from typing import Optional
-import requests
 import time
+from typing import Optional
+
+import requests
+from bs4 import BeautifulSoup
 
 
 class BaseScraper:
