@@ -4,7 +4,7 @@ Scraper(s) to help the journalists retrieve data or monitor sites for potential 
 ## Using the scrapers
 
 ```
-pip install scrapers_for_journalists==0.1.0
+pip install scrapers_for_journalists==0.1.2
 ```
 
 And then import a scraper, e.g. `from domstoldk.retrive import DomStolScrape`
@@ -19,5 +19,14 @@ This scrapers retrieves information about current court cases ("retslister") in 
 
 To run it manually, use:
 ```
-poetry run python domstol-dk/retrieve.py --outfile test.xlsx
+poetry run python domstoldk/retrieve.py --outfile test.xlsx
+```
+
+### afdøde.dk
+
+This scraper retrieves information about public "dødsannoncer" from afdøde.dk.
+
+To run it manually, use:
+```
+poetry run python afdoededk/retrieve.py --outfile test.xlsx --from_date "2024-11-01" --to_date "2024-11-02"
 ```
