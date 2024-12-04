@@ -30,3 +30,12 @@ To run it manually, use:
 ```
 poetry run python afdoededk/retrieve.py --outfile test.xlsx --from_date "2024-11-01" --to_date "2024-11-02"
 ```
+
+# politi.dk
+
+This scraper retrieves police reports ("døgnrapporter") from politi.dk.
+
+To run it manually, use:
+```
+poetry run python doegnrapporter/retrieve.py --outfile test.xlsx --from_date "2024-11-01" --to_date "2024-11-01"
+```
