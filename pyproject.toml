@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "scrapers_for_journalists"
-version = "0.1.4"
+version = "0.1.5"
 description = "Scrapers that helps journalists at Kristeligt Dagblad"
 authors = ["MadsLang <lang@k.dk>"]
 readme = "README.md"
