@@ -4,7 +4,7 @@ Scraper(s) to help the journalists retrieve data or monitor sites for potential 
 ## Using the scrapers
 
 ```
-pip install scrapers_for_journalists==0.1.2
+pip install scrapers_for_journalists
 ```
 
 And then import a scraper, e.g. `from domstoldk.retrive import DomStolScrape`
