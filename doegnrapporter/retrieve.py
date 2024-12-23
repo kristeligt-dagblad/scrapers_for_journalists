@@ -16,7 +16,7 @@ class DoegnRapportScraper(BaseScraper):
 
     def __init__(self):
         self.headers = {
-            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:132.0) Gecko/20100101 Firefox/132.0"
+            "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0"
         }
 
     def get_pages(self, publish_date_from: str, publish_date_to: str) -> list[dict]:
