@@ -33,7 +33,9 @@ class AfdoedeScraper(BaseScraper):
                 else e.get("href")
                 for e in soup.select("h5 a.text-decoration-none[href*='/minde']")
             ]
-            new_places_for_links = [e.text.strip() for e in soup.select("h5 + p + p")]
+            new_places_for_links = [
+                e.text.strip() for e in soup.select("h5 + p + div p")
+            ]
 
             if len(new_links) == 0:
                 print(f"Got to the last page: {page_no}")
