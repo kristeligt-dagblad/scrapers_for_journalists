@@ -8,6 +8,51 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 
+DANISH_MONTHS = {
+    "januar": 1,
+    "februar": 2,
+    "marts": 3,
+    "april": 4,
+    "maj": 5,
+    "juni": 6,
+    "juli": 7,
+    "august": 8,
+    "september": 9,
+    "oktober": 10,
+    "november": 11,
+    "december": 12,
+}
+
+
+def parse_danish_date(value: str) -> tuple[int, int | None, int | None] | None:
+    """
+    Parses "1927" or "24. maj 1927" into (year, month, day).
+    Returns None if no year is found.
+    """
+    value = (value or "").strip().lower()
+    full = re.search(r"(\d{1,2})\.\s*([a-zæøå]+)\s+(\d{4})", value)
+    if full and full.group(2) in DANISH_MONTHS:
+        return int(full.group(3)), DANISH_MONTHS[full.group(2)], int(full.group(1))
+    year = re.search(r"\d{4}", value)
+    if year:
+        return int(year.group(0)), None, None
+    return None
+
+
+def compute_age(born: str, died: str) -> int | None:
+    """
+    Age at death. Exact when both values are full dates (the format afdøde.dk
+    has used since December 2024), otherwise the difference in years.
+    """
+    b, d = parse_danish_date(born), parse_danish_date(died)
+    if b is None or d is None:
+        return None
+    age = d[0] - b[0]
+    if None not in (b[1], b[2], d[1], d[2]) and (d[1], d[2]) < (b[1], b[2]):
+        age -= 1
+    return age if 0 <= age < 130 else None
+
+
 class AfdoedeScraper(BaseScraper):
     """
     Scraping dødsannoncer fra afdøde.dk
@@ -48,12 +93,14 @@ class AfdoedeScraper(BaseScraper):
         return links
 
     def parse_death_page(self, soup: BeautifulSoup, url: str) -> dict:
-        try:
-            announcement_text = soup.select_one(
-                "div#primaryAnnouncementText"
-            ).text.strip()
-        except AttributeError:
-            announcement_text = ""
+        # afdøde.dk moved the text into a flip card around 2026-04-08;
+        # keep the old selector as a fallback.
+        text_element = soup.select_one(
+            ".obituary-flip-section .obituary-flip-back"
+        ) or soup.select_one("div#primaryAnnouncementText")
+        announcement_text = (
+            text_element.text.replace("​", "").strip() if text_element else ""
+        )
 
         try:
             name = soup.select_one("h1").text
@@ -67,10 +114,7 @@ class AfdoedeScraper(BaseScraper):
         except AttributeError:
             year_of_birth, year_of_death = "", ""
 
-        try:
-            age = int(year_of_death) - int(year_of_birth)
-        except ValueError:
-            age = None
+        age = compute_age(year_of_birth, year_of_death)
 
         try:
             published_date = re.findall(
